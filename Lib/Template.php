@@ -178,7 +178,7 @@ class Template
     public function clean($path=null){
         if ($path === null){
             $path = $this->arrayConfig['compiledir'];
-            $path = glob($path.'* '.$this->arrayConfig['suffix_cache']);
+            $path = glob($path.'*'.$this->arrayConfig['suffix_cache']);
         }else{
             $path = $this->arrayConfig['compiledir'].md5($path).'.htm';
         }
