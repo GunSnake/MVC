@@ -10,6 +10,18 @@ include S_ROOT.'/Model/Loader.php';
 
 spl_autoload_register("\\Model\\Loader::autoload");
 
-Model\Object::test();
-App\Controller\Home\Home::test();
-var_dump($GLOBALS);
+\Controller\Register::set('request',\Controller\Router::request());
+\Controller\Register::set('dbq',new \Model\Connection());
+\Controller\Register::set('template', new \Lib\Template());
+
+$request = \Controller\Register::get('request');
+echo '<hr />'.'router'.'<br />';
+var_dump($request);
+if (!isset($request['do'])||$request['do'] == 'index'){
+    $controller = new \Controller\IndexController();
+}
+
+
+
+
+

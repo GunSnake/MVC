@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>五子棋程序</title>
+	<script src="../public/js/jquery-1.11.1.min.js"></script>
+	<script src="../public/js/html2canvas.min.js"></script>
+	<script>
+		$(function(){
+			var num = 1; 			//棋子进行数目
+			var arr = new Array();	//记录棋子数据
+			var arr_now = new Array();	//当前棋子所在
+			var playerOne=new Array();
+			var playerTwo=new Array();
+			var GameOver = false;
+			var Chessed = "<?php echo $content; ?>";
+			if(Chessed != '') {
+                 var chess_arr = Chessed.split(',');
+                 num = 1;
+                 $.each(chess_arr, function(i,o){
+                     setTimeout(function(){
+                         var c_position = o.split('-');
+                         var pos_x = c_position[0] * 43 - 58;
+                         var pos_y = c_position[1] * 43  - 30 * (num + 1) - 40;
+                         arr[num] = [c_position[0], c_position[1]];
+                         //落子
+                         var pclass = (num%2) ? 'black' : 'white';
+                         var nclass = (num%2) ? 'white' : 'black';
+                         $("#board").append('<div class="'+pclass+'" id="piece'+num+'"></div>');
+                         $("#piece"+num).css({'position':'relative','left':pos_x+'px','top':pos_y+'px'});
+                         $("#piece"+num).append('<span style="color:'+nclass+';position:relative;top:5px;">'+num+'</span>');
+                         num++;
+                     }, i*100);
+                 });
+			 }
+			//构建棋盘
+			for(j=1;j<15;j++){
+				$("#table").append('<tr class="border" name="tr"></tr>');
+			}
+			for(i=1;i<15;i++){
+				$("tr[name='tr']").append('<td class="border"></td>');
+			}
+			//构建点
+			var arr1 = new Array(124,468,296,124,468);
+			var arr2 = new Array(124,116,280,444,436);
+			for(i=0;i<5;i++){
+				$("#board").append('<div class="dot" id="dot'+i+'"></div>');
+				$("#dot"+i).css({'position':'relative','left':arr1[i]+'px','top':arr2[i]+'px'});
+			}
+			//判断胜利条件
+			var count=0;
+			var win = new Array();
+			//构建三维数组
+			for(var i=1;i<=15;i++){
+				win[i] = [];
+				for(var j=1;j<=15;j++){
+					win[i][j] = [];
+				}
+			}
+			//构建横向赢取条件
+			for(var i=1;i<=15;i++){
+				for(var j=1;j<=11;j++){
+					for(var k=1;k<=5;k++){
+						win[i][j+k-1][count] = true;
+					}
+					count++;
+				}
+			}
+			//构建竖向赢取条件
+			for(var i=1;i<=15;i++){
+				for(var j=1;j<=11;j++){
+					for(var k=1;k<=5;k++){
+						win[j+k-1][i][count] = true;
+					}
+					count++;
+				}
+			}
+			//构建斜线赢取条件
+			for(var i=1;i<=11;i++){
+				for(var j=1;j<=11;j++){
+					for(var k=1;k<=5;k++){
+						win[i+k-1][j+k-1][count] = true;
+					}
+					count++;
+				}
+			}
+			//构建反斜线赢取条件
+			for(var i=1;i<=11;i++){
+				for(var j=15;j>4;j--){
+					for(var k=1;k<=5;k++){
+						win[i+k-1][j-k+1][count] = true;
+					}
+					count++;
+				}
+			}
+			for(var i=0;i<count;i++){
+				playerOne[i] = 0;
+				playerTwo[i] = 0;
+			}
+			//点击放置棋子
+			$("#cboard").bind("click", function(event){
+				var isReturn = false; //设置是否返回的数值
+				if(GameOver) {
+					var end_chess = window.confirm('游戏已结束, 是否再来一局');
+					if(end_chess) window.location.reload();
+					return false;
+				}
+				//回合数
+				$("#turn").text("这是第"+num+"回合");
+				var e = event || window.event;
+				//元素相对父元素位置
+				var x = e.offsetX;
+				var y = e.offsetY;
+				var i = GetPosi(x);
+				var j = GetPosi(y);
+				//显示坐标
+				$("#x").text(x);
+				$("#y").text(y);
+
+				var pos_x = i * 43 - 58;
+				var pos_y = j * 43  - 30 * (num + 1) - 40;
+				arr_now = [i, j];
+				$.each(arr, function(i,o){
+					if(i == 0) return true;
+					if(o.join('-') == arr_now.join('-')){
+						isReturn = true;
+						alert('不要在有棋子的地方下！');return false;
+					}
+				});
+				if(isReturn) return false;
+				arr[num] = new Array();
+				arr[num] = [i, j];
+
+				//落子
+				var pclass = (num%2) ? 'black' : 'white';
+				var nclass = (num%2) ? 'white' : 'black';
+				$("#board").append('<div class="'+pclass+'" id="piece'+num+'"></div>');
+				$("#piece"+num).css({'position':'relative','left':pos_x+'px','top':pos_y+'px'});
+				$("#piece"+num).append('<span style="color:'+nclass+';position:relative;top:5px;">'+num+'</span>');
+				num++;
+				//判断是否胜利
+				for(var k=0;k<count;k++){
+					if(pclass == 'black'){
+						if(win[i][j][k]){
+							playerOne[k]++;
+							playerTwo[k] = 12;
+							if(playerOne[k] == 5){
+								window.alert("Black WIN!");
+								GameOver = true;
+							}
+						}
+					}else if(pclass == 'white'){
+						if(win[i][j][k]){
+							playerTwo[k]++;
+							playerOne[k] = 12;
+							if(playerTwo[k] == 5){
+								window.alert("White WIN!");
+								GameOver = true;
+							}
+						}
+					}
+				}
+				/* var clickNode = event.target;
+				 var e = e || window.event;
+				 //元素相对table元素位置`
+				 var posx = clickNode.offsetLeft;
+				 var posy = clickNode.offsetTop;
+				 //点击位置相对父元素位置
+				 var x = (e.offsetX || e.clientX - document.body.offsetLeft) + posx;
+				 var y = (e.offsetY || e.clientY - document.body.offsetTop) + posy;
+				 $("#x").text(x);
+				 $("#y").text(y);
+				 var pos_x = GetPosi(x);
+				 var pos_y = GetPosi(y);
+				 if(!pos_x || !pos_y) return; */
+			});
+			//撤回上一步
+			$("#do_back").bind('click', function(){
+				num--;
+				$("#piece"+num).remove();
+				arr.pop();
+			});
+			//保存棋谱图片到本地
+			/* $("#save_chess").bind('click', function(){
+			 html2canvas(document.body,{
+			 onrendered: function(canvas){
+			 document.getElementById("pic").appendChild(canvas);
+			 },
+			 canvas_id: 'canvas',
+			 });
+			 }); */
+			//上传棋谱文件
+			$("#upload_chess").bind('click', function(){
+				$("#file").click();
+			});
+			//
+			$("#file").change(function(){
+				$("#form").submit();
+			});
+			//保存棋谱到文件中
+			$("#save_chess").bind('click', function(){
+				var c_str='';
+				for(i=1;i<arr.length;i++){
+					c_str += arr[i].join("-");
+					if(i == (arr.length - 1)) continue;
+					c_str += ',';
+				}
+				var date = new Date();
+				var time = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+'_'+date.getTime();
+				downloadFile(time+'.txt', c_str);
+			});
+		});
+		function GetPosi(num){
+			var pos = 1;
+			var i;
+			for(i=22;i<=num;i+=43){
+				pos++;
+			}
+			return pos;
+		}
+		/**
+		 * 创建本地文件并下载
+		 * 文件命名，文件内容
+		 */
+		function downloadFile(fileName, content){
+			var aLink = document.createElement('a');
+			var blob = new Blob([content]);
+			var evt = document.createEvent("HTMLEvents");
+			evt.initEvent("click", false, false);//initEvent 不加后两个参数在FF下会报错, 感谢 Barret Lee 的反馈
+			aLink.download = fileName;
+			aLink.href = URL.createObjectURL(blob);
+			aLink.dispatchEvent(evt);
+		}
+	</script>
+	<style>
+		body{text-align:center;}
+		.table{border: 1px solid black;margin-left:30%;border-collapse:collapse;background-color: #D9E8F1;}
+		.border{height:40px;width:40px;border: 1px solid black;}
+		.black{width:30px;height:30px;background-color: black;border-radius:30px;}
+		.white{width:30px;height:30px;background-color: white;border-radius:30px;}
+		.dot{width:8px;height:8px;background-color: black;border-radius:10px;}
+		.whiteboard{width:602px;height:602px;margin:auto;position: absolute;top: -602px;}
+		.clickboard{width:602px;height:602px;margin:auto;position: absolute;top: -602px;z-index:1;}
+	</style>
+</head>
+<body>
+<h1 style="text-align:center;">五子棋测试程序0.01<span style="text-align:center;font-size:20px;" id="turn"></span></h1>
+
+<div style="text-align:center;">x坐标：<span id="x"></span>
+	y坐标：<span id="y"></span>
+	<input type="button" value="点击回撤" id="do_back"  style="text-align:center;">
+	<input type="button" value="保存棋谱" id="save_chess"  style="text-align:center;">
+	<input type="button" value="上传棋谱" id="upload_chess"  style="text-align:center;">
+</div>
+<div id="table_all">
+	<table class="table" id="table"></table>
+	<div style='position:relative;width:0;height:0;margin-left:30%;'><div class="whiteboard" id="board"></div></div>
+	<div style='position:relative;width:0;height:0;margin-left:30%;'><div class="clickboard" id="cboard"></div></div>
+</div>
+<div id="pic"></div>
+<div style="display:none;">
+	<form action="index.php" method="post" id="form" enctype="multipart/form-data">
+		<input type="file" name="file" id="file">
+	</form>
+</div>
+</body>
+</html>

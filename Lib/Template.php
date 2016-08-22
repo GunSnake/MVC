@@ -7,13 +7,13 @@
  */
 
 namespace Lib;
-include 'CompileClass.php';
+require 'CompileClass.php';
 use Lib\CompileClass;
 class Template
 {
     private $arrayConfig = array(
         'suffix' => '.m',           //模板文件后缀
-        'templateDir'=> 'template/',//模板文件的文件夹
+        'templateDir'=> 'View/template/',//模板文件的文件夹
         'compiledir'=>'cache/',     //编译后文件存放的目录
         'cache_htm'=> false,        //是否需要编译为静态的html文件
         'suffix_cache'=> '.htm',    //编译文件的后缀

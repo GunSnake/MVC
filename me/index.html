@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="deerResume">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>柏 龙 | 我的简历</title>
+   
+   
+    <link rel="stylesheet" href="dist/css/app.min.css">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?dcb66c6fbcaffe2c333e24a521f4b0b3";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <script src="dist/js/app.js"></script>
+</head>
+<body>
+    <base target="_blank">
+    <div ng-view id="resume_body"></div>
+    <form action="#" method="post" target="_blank" id="hform"> 
+    <!-- http://pdf.ftqq.com -->
+        <input type="hidden" name="title"/>
+        <input type="hidden" name="subtitle"/>
+        <input type="hidden" name="content"/>
+        <input type="hidden" name="pdfkey"/>
+</form>  
+</body>
+
+</html>
