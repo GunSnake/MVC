@@ -32,7 +32,7 @@ class CompileClass
         $this->T_P[] = "#\{\\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\}#";//{$var}形式
         $this->T_P[] = "#\{(loop|foreach) \\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\}#i";// loop|foreach $v 形式
         $this->T_P[] = "#\{\/(loop|foreach|if)\}#i";// /if|/foreach|/loop
-        $this->T_P[] = "#\{([k|v])\}#";//{k}|{v}
+        $this->T_P[] = "#\{(\\$[a-zA-Z_]\S*)\}#";//{k}|{v}
         $this->T_P[] = "#\{if (.* ?)\}#i";// if $etc.
         $this->T_P[] = "#\{(elseif|else if) (.* ?)\}#i";//elseif|else if $etc.
         $this->T_P[] = "#\{else\}#i";// else
@@ -42,7 +42,7 @@ class CompileClass
         $this->T_R[] = "<?php echo \$this->value['\\1']; ?>";
         $this->T_R[] = "<?php foreach ((array)\$this->value['\\2'] as \$k => \$v) { ?>";
         $this->T_R[] = "<?php } ?>";
-        $this->T_R[] = "<?php echo \$\\1; ?>";
+        $this->T_R[] = "<?php echo \\1; ?>";
         $this->T_R[] = "<?php if (\\1) { ?>";
         $this->T_R[] = "<?php }else if (\\2){ ?>";
         $this->T_R[] = "<?php }else{ ?>";

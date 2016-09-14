@@ -1,7 +1,7 @@
 <?php
 /**
  * Mysqli方式的数据库连接
- * User: bailong
+ * User: 95
  * Date: 2016/6/27
  * Time: 10:43
  */

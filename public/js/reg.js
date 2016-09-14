@@ -52,8 +52,8 @@ function keyEvent(e,v){
 }
 //改变验证码
 function ChangeYzm(){
-	var path = "./public/yzm.php?rnd=" + 10*Math.random();
-	var bs_path = "./public/base_yzm.php?rnd=" + Math.random();
+	var path = "./Lib/yzm.php?rnd=" + 10*Math.random();
+	var bs_path = "./Lib/base_yzm.php?rnd=" + Math.random();
 	$("#base").attr("src", path);
 	$("#base_yzm").attr("src", bs_path);
 }
@@ -74,7 +74,7 @@ function Fillin(e){
 //填充函数
 function DoFillin(val){
 	var data = {
-		'method' : 'session_basecode',	
+		'method' : 'session_basecode',
 	};
 	$.ajax({
     	content : document.body,
@@ -126,7 +126,7 @@ function CheckWords(type){
 			content: document.body,
 			type: "GET",
 			data: data,
-			url: 'reg.php',
+			url: 'index.php?do=reg',
 			success: function(b){
 				if(b == 'can'){
 					$("#u_name").attr("style","");
@@ -227,7 +227,7 @@ function DoReg(){
     	content : document.body,
     	data : data,
     	type : "POST",
-    	url : 'reg.php',
+    	url : 'index.php?do=reg',
     	success : function(b){
     		if (b == 'ok'){
         		alert("注册成功!");

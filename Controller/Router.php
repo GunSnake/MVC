@@ -8,7 +8,6 @@
 
 namespace Controller;
 
-
 class Router
 {
     private static $request;
@@ -23,5 +22,11 @@ class Router
             self::$getParams[$key] = $value;
         }
         return self::$getParams;
+    }
+
+    public static function method(){
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+        preg_match('#\/([a-zA-Z0-9_]*).php#',$scriptName,$method);
+        return $method[1];
     }
 }

@@ -12,12 +12,12 @@ use Lib\CompileClass;
 class Template
 {
     private $arrayConfig = array(
-        'suffix' => '.m',           //模板文件后缀
+        'suffix' => '.htm',           //模板文件后缀
         'templateDir'=> 'View/template/',//模板文件的文件夹
         'compiledir'=>'cache/',     //编译后文件存放的目录
         'cache_htm'=> false,        //是否需要编译为静态的html文件
         'suffix_cache'=> '.htm',    //编译文件的后缀
-        'cache_time'=>1800,         //缓存失效的时间
+        'cache_time'=>1,         //缓存失效的时间
         'php_turn'  => false,       //是否启用php语法
         'debug' => false,
     );

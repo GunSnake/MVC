@@ -6,22 +6,22 @@
  * Time: 22:05
  */
 require 'config.php';
-include S_ROOT.'/Model/Loader.php';
+include_once S_ROOT.'/Model/Loader.php';
 
 spl_autoload_register("\\Model\\Loader::autoload");
+\Model\Factory::CreateObj('router');
+$rout = \Controller\Register::get('router');
 
-\Controller\Register::set('request',\Controller\Router::request());
-\Controller\Register::set('dbq',new \Model\Connection());
-\Controller\Register::set('template', new \Lib\Template());
-
-$request = \Controller\Register::get('request');
-echo '<hr />'.'router'.'<br />';
-var_dump($request);
-if (!isset($request['do'])||$request['do'] == 'index'){
-    $controller = new \Controller\IndexController();
+if (!isset($rout['do'])||$rout['do'] == 'index'){
+    new \Controller\IndexController();
+}else{
+    switch ($rout['do']){
+        case 'reg':
+            $rback = new \Controller\LoginController();
+            echo $rback->back;
+            break;
+        default:
+            break;
+    }
 }
-
-
-
-
 

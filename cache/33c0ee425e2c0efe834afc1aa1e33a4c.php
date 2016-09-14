@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的留言板--注册</title>
+	<link rel='stylesheet' href='public/css/bootstrap.min.css'>
+	<script type='text/javascript' src='public/js/jquery-1.11.1.min.js'></script>
+	<script type='text/javascript' src='public/js/bootstrap.min.js'></script>
+	<link rel='stylesheet' href='public/css/jquery-ui-1.9.2.css'>
+	<script type='text/javascript' src='public/js/jquery-ui-1.9.2.min.js'></script>
+	<script type="text/javascript" src="public/js/reg.js"></script>
+	<link rel="stylesheet" href="public/css/reg.css">
+<script>
+	$(function (){
+		$("#u_name").tooltip();
+		$("#pwd").tooltip();
+		$("#re_pwd").tooltip();
+		$("#yzm").tooltip();
+	});
+</script>
+</head>
+<body>
+<div>
+	<iframe src="View/template/header.html" frameborder="0"  scrolling="no" width="100%" ></iframe>
+</div>
+
+<div class="reg">
+	<h3 class="title">注册页面</h3>
+	<div class="reg_main"><br />
+		<span>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在此注册成为<a href="#">我的留言板</a>的用户，本网站承诺您的用户信息不会被用作商业用途！
+		</span><br /><br />
+		<div class="reg_form">
+			<div>
+				<p><span>*</span>用户名：</p>
+				<input type="text" id="u_name"  maxlength="16" title="16个字符内的数字、字母、下划线" value="" oninput="CheckWords('u_word');return false;">
+				<span id="name_info" aria-hidden="true"></span><br />
+				<span id="user_err" class="err_info1"></span><br /><br />
+				
+				<p><span>*</span>密码：</p>
+				<input id="pwd" type="password"  maxlength="16" title="16个字符内的数字、字母、下划线" value="" oninput="CheckWords('p_word');return false;">
+				<img ><br />
+				<span id="pwd_err" class="err_info2"></span><br /><br />
+				
+				<p><span>*</span>再次输入密码：</p>
+				<input id="re_pwd" type="password"  maxlength="16"  title="与设定密码相同" value="" oninput="CheckWords('rp_word');return false;"><br />
+				<span id="repwd_err" class="err_info3"></span><br /><br />
+				
+				<p><span>*</span>验证码：</p>
+				<input type="text" id="yzm" title="点击获取验证码" data-toggle="modal" data-target="#myYzm"><br />
+				<span id="yzm_err" class="err_info4"></span><br /><br />
+				
+				<div class="reg_sure"><input type="checkbox" id="ck" onchange="ChangeButton();return false;"></div>
+				<span class="wd">同意本网站的<a data-toggle="modal" href="public/zcxy.html" data-target="#myModal">注册协议</a></span><br /><br />
+				<input type="submit" id="submit" value="注册" class="btn btn-info" disabled="disabled" onclick="DoReg();return false;">
+			</div>
+		</div>
+	</div>
+	<div class="reg_about">
+		<ul class="nav nav-tabs" style="font-size: 18px;">
+		  <li role="presentation" id="mytab1"><span>绑定第三方</span></li>	  
+		</ul>
+		<img alt="微博登陆" src="public/images/weibo_login.png" class="third_login">
+	</div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="myYzm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="margin-top: 250px;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel" style="font-size: 25px;text-align: center;">验证码</h4>
+      </div>
+      <div class="modal-body">
+      	<input type="text" class="hz" id="hz1" style="font-size: 18px;" maxlength="1" oninput="GoNext(1);return false;" onkeyup="keyEvent(event, 1);">
+      	<input type="text" class="hz" id="hz2" style="font-size: 18px;" maxlength="1" oninput="GoNext(2);return false;" onkeyup="keyEvent(event, 2);">
+      	<input type="text" class="hz" id="hz3" style="font-size: 18px;" maxlength="1" oninput="GoNext(3);return false;" onkeyup="keyEvent(event, 3);">
+      	<input type="text" class="hz" id="hz4" style="font-size: 18px;" maxlength="1" oninput="GoNext(4);return false;" onkeyup="keyEvent(event, 4);">
+      	<img src="Lib/yzm.php" id="base">
+      	<a href="#" onclick="ChangeYzm();" id="cg">点击获取新验证码</a><br />
+      	<img src="Lib/base_yzm.php" class="bs_yzm" id="base_yzm" onclick="Fillin(event);return false;">
+      	X：<span id="mp_x"></span> 
+		Y：<span id="mp_y"></span>
+		<button class="btn btn-info" onclick="SumitYzm();return false;">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+	<iframe src="View/template/footer.html" frameborder="0"  scrolling="no"></iframe>
+</div>
+</body>
+</html>

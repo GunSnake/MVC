@@ -1,7 +1,7 @@
 <?php
 /**
  * 连接和处理数据库中数据类
- * User: bailong
+ * User: 95
  * Date: 2016/6/8 0008
  * Time: 14:37
  */
@@ -12,11 +12,12 @@ require_once __DIR__ . '/MysqlConn/PDOConn.php';
 require_once __DIR__ . '/MysqlConn/MySQLiConn.php';
 
 use \PDO;
-use project_weibo\Project\MysqlConn\PDOConn;
-use project_weibo\Project\MysqlConn\MySQLiConn;
+use Model\MysqlConn\PDOConn;
+use Model\MysqlConn\MySQLiConn;
 
 class Connection
 {
+    private static $Instance;
     private $conn;//数据库连接
     private $sql;//查询语句
     /**
@@ -33,8 +34,15 @@ class Connection
         }*/
         $nowdb = $dbinfo['mysqlDb'];
         $this->conn = \Model\MysqlConn\MySQLiConn::getInstance($nowdb['host'], $nowdb['user'], $nowdb['password'], $nowdb['dbname'], $nowdb['port']);
+        $this->conn->set_charset('utf8');
     }
 
+    public static function getInstance(){
+        if (!self::$Instance){
+            self::$Instance = new self();
+        }
+        return self::$Instance;
+    }
     /**
      *  查询所有的数据库数据
      * @param $sql 查询语句
@@ -53,6 +61,11 @@ class Connection
         return $re;
     }
 
+    public function &query($sql){
+        $res = $this->conn->query($sql);
+        $num = $res->num_rows;
+        return $num;
+    }
     /**
      * 取出数据库中某一条语句的值
      * @param $sql  查询语句
