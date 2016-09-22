@@ -1,0 +1,71 @@
+/*针对手机用户*/
+.body{
+    font-family:微软雅黑;
+}
+@media screen and (max-width: 1024px){
+    #index_head{
+        display: none;
+    }
+}
+
+.jumbotron{
+    margin-top: 70px;
+    height: 35%;
+    text-align: center;
+    display: none;
+}
+/*标题头*/
+.main-containter>div:first-child{
+    width:100%;
+    height: 150px;
+    background-color: lightyellow;
+}
+
+/*中信息栏*/
+.main-containter>div:nth-child(2){
+    background-color: lightblue;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+}
+.main-containter>div:nth-child(2)>div{
+    width: 50%;
+    height: 50px;
+    font-size: 24px;
+    background-color: lightyellow;
+    border: 1px solid lightyellow;
+    border-radius: 50px;
+    line-height: 50px;
+    -webkit-transform: translate(50%,50%);
+    -ms-transform: translate(50%,50%);
+    transform: translate(50%,50%);
+}
+.main-containter>div:nth-child(2)>div>span{
+    color: #00b3ee;
+    font-size: 30px;
+}
+/*抽奖栏*/
+.main-containter>div:last-child{
+    width: 100%;
+    height: 300px;
+    background-color: lightcyan;
+    align-items: center;
+}
+.main-containter>div:last-child>div{
+    width: 90%;
+    height: 90%;
+    border: 1px solid lightpink;
+    -webkit-transform: translate(5%,5%);
+    -ms-transform: translate(5%,5%);
+    transform: translate(5%,5%);
+    background-color: #fff;
+    text-align: center;
+}
+.main-containter>div:last-child>div div{
+    border: 1px solid red;
+    border-radius: 20px;
+    height: 33.3%;
+}
+.unclick{
+    background-color: lightgrey;
+}
