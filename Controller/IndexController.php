@@ -14,16 +14,54 @@ use Model\IndexModel;
 
 class IndexController
 {
+    public $param;
+    public $index;
+    public $template;
+
     public function __construct()
     {
-        $index_model = new IndexModel();
-        $list = $index_model->getindex();
-        $str = "{\$v['ccc']}";
-        /*$str = preg_replace('#\{(\\$\S*)\}#', '<?php echo ${1};?>', $str);
-        var_dump($str);die;*/
+        //处理类
+        $this->index = new IndexModel();
+        //模版参数
         Factory::CreateObj('template');
-        $tpl = Register::get('template');
-        $tpl->assign('list', $list);
-        $tpl->show('index');
+        $this->template = Register::get('template');
+
+        $this->param = $_REQUEST;
+        $op = $this->param['op'];
+        switch ($op){
+            case 'upload':$this->upload();
+                break;
+            case 'insert':$this->insert();
+                break;
+            default:$this->index_list();
+                break;
+        }
+    }
+
+    public function insert(){
+        $this->index->insert_log($this->param);
+    }
+
+    public function index_list(){
+        $this->param['time1'] = strtotime($this->param['time1']);
+        $this->param['time2'] = strtotime($this->param['time2']);
+        $res = $this->index->getindex($this->param);
+        if ($res){
+            foreach($res as $k => $v){
+                $v['date'] = date('Y-m-d H:i:s', $v['log_time']);
+                $res[$k] = $v;
+            }
+        }
+        if (strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strpos($_SERVER['HTTP_USER_AGENT'], 'Android'))
+            $user_agent = 'mb';
+        else
+            $user_agent = 'pc';
+        $this->template->assign('list', $res);
+        $this->template->assign('user_agent', $user_agent);
+        $this->template->show('index');
+    }
+
+    public function upload(){
+        $this->index->update_log($this->param);
     }
 }

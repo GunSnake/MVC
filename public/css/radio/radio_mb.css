@@ -1,0 +1,32 @@
+.my_audio{
+    margin-left: 15px;
+    border-left: 1px solid #e3f2fd;
+}
+
+/* 播放进度条 */
+.my_audio .play_num{position: relative;width: 100%;}
+.my_audio .play_num .cur{float:left;}
+.my_audio .play_num .max{float:right;}
+/* 进度条 */
+.play_num{text-align: center;}
+.play_num input[type=range]{width: 76%;}
+.range {
+    height: 0.15rem;
+    background: #2386e4;
+    border-radius: 0.25rem;
+    -webkit-appearance: none !important;
+    position: absolute;
+    top: 8px;
+    left: 11%;
+}
+/* 进度滑块 */
+.range::-webkit-slider-thumb {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #fff;
+    border: 1px solid #f18900;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    -webkit-appearance: none !important;
+}
+/* 播放进度条 */

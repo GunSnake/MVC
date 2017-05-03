@@ -7,10 +7,10 @@
  */
 return [
 'mysqlDb' => [
-    'host'      => '45.78.18.223',
-    'user'      => 'myhost',
-    'password'  => 'bailong',
-    'dbname'    => 'trans',
+    'host'      => '127.0.0.1',
+    'user'      => 'root',
+    'password'  => '',
+    'dbname'    => 'log',
     'charset'   => 'utf8',
     'port'      => 3306,
 ],

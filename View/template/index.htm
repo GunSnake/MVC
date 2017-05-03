@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="public/css/index.css">
     <script>
         $(function(){
+            //图片查看事件
             $('#swipebox').click(function(e){
                 e.preventDefault();
                 $.swipebox([
@@ -23,6 +24,7 @@
                     loopAtEnd : true,
                 });
             });
+            //动画事件
             var num = 2;
             $(".jumbotron>p>a").click(function(){
                 var click_text = $(this).text();
@@ -45,18 +47,71 @@
             $('.jumbotron>p>a:nth-child(3)').click(function(){
                $('.jumbotron').hide();
             });
-            $('.main-containter>div:last-child>div>div:nth-child(5)').click(function(){
-                $(this).addClass('unclick');
-                $(this).unbind('click');
-
-            });
         });
+        //轮盘抽奖对象
+        var getAward = {
+            'num_all': 8,
+            'count': 0,
+            'startId': 0,
+
+            MoveToAward : function (num){
+                setTimeout(function(){
+                    clearInterval(getAward.startId);
+                    getAward.startId = setInterval(function(){getAward.run('', 240)}, 250);
+                    setTimeout(function(){
+                        clearInterval(getAward.startId);
+                        getAward.startId = setInterval(function(){getAward.run('', 340)}, 350);
+                        setTimeout(function(){
+                            var current = $('.active').val();
+                            clearInterval(getAward.startId);
+                            getAward.run(current, 340);
+                        },2000);
+                    }, 1500);
+                }, 1000);
+            },
+
+            run : function (i,t){
+                if (getAward.count == 0) getAward.count = 1;
+                if(getAward.count>getAward.num_all) getAward.count = 1;
+                $('#aw'+getAward.count).addClass('active');
+                setTimeout(function(){
+                    $('#aw'+getAward.count).removeClass('active');
+                    getAward.count++;
+                }, t);
+            },
+
+            changeView : function (){
+                if ($('.unclick').html()) return false;
+                $('.main-containter>div:last-child>div>div:nth-child(5)').addClass('unclick');
+                $('.unclick').unbind('click');
+                getAward.startId = setInterval(function(){getAward.run('',90)}, 100);
+                $.post('getAward.php',{'usr':1},function(ret){
+                    getAward.MoveToAward(ret);
+                    //$('.unclick').removeClass('unclick');
+                    $('.main-containter>div:last-child>div>div:nth-child(5)').bind('click',function(){
+                        getAward.MoveToAward(ret);
+                        getAward.changeView();
+                    });
+                });
+            }
+        };
+        //日程安排
+        var log_box = {
+
+        };
+
     </script>
 </head>
 <body>
 <div id="index_head"></div>
 <script>$(function(){$("#index_head").load('./View/template/header.html')});</script>
-<div class="jumbotron">
+<!--图片查看器-->
+<!--<div>
+    <img src="./public/images/1.png" id="swipebox">
+</div>-->
+
+<!--早期页面头-->
+<!--<div class="jumbotron">
     <h2>这是一个个人技术网站<br /> 不一定会放什么上去<br /> JUST FOR FUN</h2>
     <p>_(:з」∠)_</p>
     <p>
@@ -67,29 +122,197 @@
     <div class="n_close">
         <div></div>
     </div>
-</div>
-<div class="menu-title">
+</div>-->
 
-</div>
-<div class="main-containter">
+<!--抽奖轮盘-->
+<!--<div class="main-containter">
     <div></div>
     <div>
         <div>你有<span>10</span>次机会</div>
     </div>
     <div>
         <div>
-            <div class="col-xs-4">1</div>
-            <div class="col-xs-4">2</div>
-            <div class="col-xs-4">3</div>
-            <div class="col-xs-4">4</div>
-            <div class="col-xs-4">立即抽奖</div>
-            <div class="col-xs-4">6</div>
-            <div class="col-xs-4">7</div>
-            <div class="col-xs-4">8</div>
-            <div class="col-xs-4">9</div>
+            <div class="col-xs-4" id="aw1" value="1">1</div>
+            <div class="col-xs-4" id="aw2" value="2">2</div>
+            <div class="col-xs-4" id="aw3" value="3">3</div>
+            <div class="col-xs-4" id="aw8" value="8">8</div>
+            <div class="col-xs-4" onclick="getAward.changeView();return false;">立即抽奖</div>
+            <div class="col-xs-4" id="aw4" value="4">4</div>
+            <div class="col-xs-4" id="aw7" value="7">7</div>
+            <div class="col-xs-4" id="aw6" value="6">6</div>
+            <div class="col-xs-4" id="aw5" value="5">5</div>
         </div>
     </div>
+</div>-->
+<!--<div class="log">
+    {loop $list}
+    <div class="div_part">
+        <span class="log_title">{$v['log_title']}</span><br />
+        <span class="log_date">{$v['date']}</span><br />
+        <span class="log_data">{$v['log_data']}</span><br />
+    </div>
+    {/loop}
+</div>-->
+
+{if $user_agent == 'mb'}
+    <link rel="stylesheet" href="public/css/radio/radio_mb.css">
+{else}
+    <link rel="stylesheet" href="public/css/radio/radio_pc.css">
+{/if}
+<div class="audio">
+    {loop $list}
+    <div></div>
+    {/loop}
 </div>
+<div id="my_audio" class="my_audio"></div>
+<div id="my_audio2" >
+
+</div>
+
+<script>
+
+    $(function(){
+        var num = {eval echo count($list)};
+        var length = 10 * 200;
+        var user_agent = '{$user_agent}';
+        $('.my_audio').css(user_agent=='mb'?'height':'width', length);
+        //初始化播放器
+        m_audio.Init("my_audio", 'http://192.168.0.128/MVC/Upload/vol62.mp3');
+        //获取总时间
+        m_audio.getTimeAll();
+        $('.range').change(function(){
+            var num = $('.range').val();
+            m_audio.setAudioTime(num/100*m_audio.times);
+        });
+    });
+    var m_audio = {
+        params : '',//参数对象
+        a_div : '',//音频div对象
+        def_div : 'my_audio',//默认对象
+        audio : '',//音频对象
+        au_id : 'audio_id',//音频id
+        src : '',//音频地址
+        canPlay : true,//是否可播放
+        autoPlay : true,//自动播放
+        playRate : 1,//播放速率0~4， 1=normal
+        volume : 0.5,//音量[0,1]
+        controls : true,//控制条
+        status : 0,//状态，0=未初始化，1=未使用网络，2=正在下载，3=未找到音频来源
+        times : 0,//总时间
+
+        Init : function (){
+            //所有参数
+            m_audio.params = arguments;
+            //获取div
+            m_audio.a_div = $('#'+m_audio.params[0]);
+            //文件地址
+            m_audio.src = m_audio.params[1];
+            //audio标签id
+            m_audio.au_id = m_audio.params[2]?m_audio.params[2]:m_audio.au_id;
+            //在div中创建audio
+            m_audio.createAudioDiv(m_audio.params[0]);
+            //获取audio对象
+            m_audio.audio = $('#'+m_audio.au_id)[0];
+            //检测是否可播放
+            m_audio.canPlay = m_audio.audio.canPlayType('audio/mp3');
+            if (!m_audio.canPlay){
+                m_audio._alert();
+                return false;
+            }
+            m_audio.setParam();
+        },
+
+        /***
+         * 设置播放器初始属性
+         */
+        setParam : function(){
+            m_audio.audio.src = m_audio.src;//地址
+            m_audio.audio.autoplay = m_audio.autoPlay;//自动播放
+            m_audio.audio.playbackRate = m_audio.playRate;//播放速率
+            m_audio.audio.volume = m_audio.volume;//音量
+            m_audio.audio.controls = m_audio.controls;//控制器
+            m_audio.setCurrentTime();//时间滚动
+        },
+
+        /**
+         * 创建播放器容器
+         */
+        createAudioDiv : function (id){
+            if (!(m_audio.a_div.length>0 && m_audio.a_div.length)){//div是否存在
+                var html = '<div id="'+id+'"></div>';
+                $("body").eq(0).append(html);
+            }
+            var html1 = '<audio id="'+m_audio.au_id+'" ><source >你的浏览器不支持播放</audio>';
+            html1 += "<div class='play_num'><span class='cur'></span><input type='range' min=0 max=100 class='range' value=0><span class='max'></span></div>";
+            $('#'+id).append(html1);
+        },
+
+        play : function (){
+            m_audio.audio.play();
+        },
+
+        parse : function (){
+            m_audio.audio.pause();
+        },
+
+        /**
+         *检测是否可播放
+         */
+        check : function(){
+            m_audio.canPlay?'':m_audio._alert();
+        },
+
+        /**
+         * 静音
+         */
+        muted : function (){
+            m_audio.audio.muted = m_audio.audio.muted?false:true;
+        },
+
+        /*当前播放时间*/
+        currentTime : function (){
+            return parseInt(m_audio.audio.currentTime);
+        },
+
+        /*时间跳转*/
+        setAudioTime : function (sec){
+            m_audio.audio.currentTime = parseInt(sec);
+        },
+
+        /*当前时间循环*/
+        setCurrentTime : function(){
+            setInterval(function(){
+                var cur_time = m_audio.currentTime();
+                //时分格式
+                var minuts = parseInt(cur_time/60);
+                var seconds = cur_time % 60;
+                var time = minuts>=10?minuts:('0'+minuts);
+                time += ':';
+                time += seconds<10?('0'+seconds):seconds
+                $('.cur').text(time);
+                $('.range').val((cur_time/m_audio.times)*100);
+            }, 1000);
+        },
+
+        getTimeAll : function (){
+            m_audio.inteval = setInterval(function(){
+                if (m_audio.audio.readyState == 4) {
+                    //总播放时间
+                    m_audio.times = parseInt(m_audio.audio.duration);
+                    var times = parseInt(m_audio.times/60)+':'+m_audio.times % 60;
+                    $('.max').text(times);
+                    //关闭inteval
+                    window.clearInterval(m_audio.inteval);
+                }
+            }, 100);
+        },
+
+        _alert : function (){
+            alert('不支持播放');
+        },
+
+    }
+</script>
 <div>
     <iframe src="View/template/footer.html" frameborder="0"  scrolling="no"></iframe>
 </div>

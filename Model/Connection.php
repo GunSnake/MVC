@@ -63,8 +63,7 @@ class Connection
 
     public function &query($sql){
         $res = $this->conn->query($sql);
-        $num = $res->num_rows;
-        return $num;
+        return $res;
     }
     /**
      * 取出数据库中某一条语句的值
@@ -104,9 +103,14 @@ class Connection
      */
     public function &insert_into($table, $param, $value){
         if (!$table || !$param || !$value) throw new \Exception('语句不正确，请重新检查');
-        $param_str = '('.implode(',', $param).')';
+        $param_str = '(`'.implode('`,`', $param).'`)';
         foreach ($value as $k => $v){
-            $value_arr[] = '('.'\''.implode("','", $v).'\''.')';
+            if(is_array($v)){
+                $value_arr[] = '('.'\''.implode("','", $v).'\''.')';
+            }else{
+                $value_arr[] = '('.'\''.implode("','", $value).'\''.')';
+                break;
+            }
         }
         $value_str = implode(',', $value_arr);
         $sql = 'INSERT INTO '.$table.' '.$param_str.' VALUES '.$value_str;

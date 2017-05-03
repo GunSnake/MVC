@@ -38,6 +38,7 @@ class CompileClass
         $this->T_P[] = "#\{else\}#i";// else
         $this->T_P[] = "#\{(\#|\* )(.* ?)(\#|\* )\}#"; //注释语法{#etc.#}
         $this->T_P[] = "#\<\!\-\-(.* ?)\-\-\>#";//html注释语法<!--etc.-->
+        $this->T_P[] = "#\{eval echo (.* ?)\}#i";//echo etc.
 
         $this->T_R[] = "<?php echo \$this->value['\\1']; ?>";
         $this->T_R[] = "<?php foreach ((array)\$this->value['\\2'] as \$k => \$v) { ?>";
@@ -48,6 +49,7 @@ class CompileClass
         $this->T_R[] = "<?php }else{ ?>";
         $this->T_R[] = "";
         $this->T_R[] = "";
+        $this->T_R[] = "<?php echo \\1 ?>";
     }
 
     /**

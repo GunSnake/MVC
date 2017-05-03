@@ -25,16 +25,32 @@ class IndexModel
      * 首页方法
      * @return mixed
      */
-    public function getindex(){
-        $sql = "SELECT a.content,a.talk_time time,b.name FROM talklist a LEFT JOIN user b ON (a.user_id=b.id)";
+    public function getindex($obj){
+        $time1 = (int)$obj['time1'];
+        $time2 = (int)$obj['time2'];
+        $str = [];
+        $str_str = '';
+        if ($time1 && $time2) $str[] = " log_time BETWEEN $time1 AND $time2 ";
+        if ($str) $str_str = 'WHERE' . implode('AND',$str);
+        $sql = "SELECT * FROM log_do $str_str";
         $res = $this->conn->query_all($sql);
-        if (!$res) return false;
-        foreach($res as $k => $v){
-            $v['rand'] = rand(1,4);
-            $v['time'] = date('Y年m月d日 H:i:s', $v['time']);
-            $res[$k] = $v;
-        }
         return $res;
+    }
+
+    public function insert_log($obj){
+        $data = ['log_time', 'log_title', 'log_data'];
+        $value=[time(),'test1','test'];
+        $this->conn->insert_into('log_do', $data, $value);
+    }
+
+    public function update_log($obj){
+        $log_title=$obj['title'];
+        $log_data=$obj['data'];
+        $l_id = (int)$obj['id'];
+        if (!$l_id || !$log_data || !$log_title) return FALSE;
+        $sql = "UPDATE log_do SET log_title='{$log_title}',log_data='{$log_data}' WHERE l_id=$l_id";
+        $this->conn->query($sql);
+        return TRUE;
     }
 
 }
